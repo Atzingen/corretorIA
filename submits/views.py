@@ -35,6 +35,7 @@ def login_page(request):
             login(request, user)
             messages.success(request, 'Login efetuado com sucesso !')
             return redirect('home')
+    messages.success(request, 'Efetuar Login para acesso ao sistema')
     form = AuthenticationForm()
     context = {'form': form}
     return render(request, 'login.html', context=context)
