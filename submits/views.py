@@ -41,7 +41,9 @@ def login_page(request):
     return render(request, 'login.html', context=context)
 
 def logout(request):
-    auth.logout(request)
-    messages.success(request, 'Logoff efetuado')
-    return render(request, 'home.html')
+    if request.user.is_authenticated:
+        auth.logout(request)
+        messages.success(request, 'Logoff efetuado')
+        return render(request, 'home.html')
+    return redirect('login')
     
