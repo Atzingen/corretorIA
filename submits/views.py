@@ -6,7 +6,7 @@ from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-# Create your views here.
+from .forms import RegisterForm
 
 def home(request):
     return render(request, 'home.html')
@@ -17,7 +17,7 @@ def atividades(request):
 def notas(request):
     return render(request, 'notas.html')
 
-@login_required
+@login_required(login_url='login')
 def submit(request):
     return render(request, 'submit.html')
 
@@ -25,9 +25,20 @@ def user_page(request):
     return render(request, 'user_page.html')
 
 def registrar(request):
-    return render(request, 'registrar.html')
+    if request.user.is_authenticated:
+        messages.success(request, 'Você já está Registrado')
+        return redirect('home')
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        form.save()
+    form = RegisterForm()
+    context = {'form': form}
+    return render(request, 'registrar.html', context)
 
 def login_page(request):
+    if request.user.is_authenticated:
+        messages.success(request, 'Você já está logado')
+        return redirect('home')
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -35,7 +46,6 @@ def login_page(request):
             login(request, user)
             messages.success(request, 'Login efetuado com sucesso !')
             return redirect('home')
-    messages.success(request, 'Efetuar Login para acesso ao sistema')
     form = AuthenticationForm()
     context = {'form': form}
     return render(request, 'login.html', context=context)
@@ -45,5 +55,6 @@ def logout(request):
         auth.logout(request)
         messages.success(request, 'Logoff efetuado')
         return render(request, 'home.html')
+    messages.success(request, 'Você ainda não fez Login')
     return redirect('login')
     
