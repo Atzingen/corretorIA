@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Mac os ignore folder ds_store
+.DS_Store
+
 # venv file
 .env
 
