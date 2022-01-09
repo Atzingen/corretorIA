@@ -6,7 +6,7 @@ from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from .forms import RegisterForm
+from .forms import RegisterForm, User
 
 def home(request):
     return render(request, 'home.html')
@@ -22,6 +22,14 @@ def submit(request):
     return render(request, 'submit.html')
 
 def user_page(request):
+    if request.method == 'POST':
+        post = request.POST
+        user = User.objects.get(id=request.user.id)
+        user.first_name = post['first_name_update']
+        user.last_name = post['last_name_update']
+        # user.username = post['username_update']
+        user.email = post['email_update']
+        user.save()
     return render(request, 'user_page.html')
 
 def registrar(request):
@@ -30,7 +38,12 @@ def registrar(request):
         return redirect('home')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
-        form.save()
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registro efetuado com sucesso !')
+            return redirect('home')
+        else:
+            messages.success(request, 'Erro no preenchimento do formulário')
     form = RegisterForm()
     context = {'form': form}
     return render(request, 'registrar.html', context)

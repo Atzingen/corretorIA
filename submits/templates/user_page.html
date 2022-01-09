@@ -2,11 +2,87 @@
 {% load static %}
 
 {% block content %}
-
-<div class="container">
-
-    <h1> Hello {{user.username}} !</h1>
-
+{% csrf_token %}
+<div class="container rounded bg-white mt-5 mb-5">
+    <h4 class="text-center">Perfil do aluno ({{user.username}})</h4>
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                <span class="font-weight-bold">{{user.username}}</span><span class="text-black-50">{{user.email}}</span><span> </span>
+            </div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Nome</label><input type="text" id="first_name" class="form-control" placeholder="{{user.first_name}}" value=""></div>
+                    <div class="col-md-6"><label class="labels">Sobrenome</label><input type="text" id="last_name" class="form-control" value="" placeholder="{{user.last_name}}"></div>
+                </div>
+                <div class="row mt-3">     
+                    <div class="col-md-12"><label class="labels">Username</label><input type="text" disabled="true" id="username" class="form-control" placeholder="{{user.username}}" value=""></div>
+                </div>
+                <div class="row mt-3">     
+                    <div class="col-md-12"><label class="labels">Email</label><input type="text" id="email" class="form-control" placeholder="{{user.email}}" value=""></div>
+                </div>
+                <div class="row mt-3">     
+                    <div class="col-md-12"><label class="labels">RA</label><input type="text" disabled="true" class="form-control" placeholder="{{user.RA}}" value=""></div>
+                </div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" id="atualizar" type="button">Atualizar perfil</button></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="col-md-12"><label class="labels">Participando do curso: {{user.active_class}}</label></div> <br>
+                <div class="col-md-12"><label class="labels">Ultimas atividades</label></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $("#atualizar").click(function(){
+            var first_name_update = $("#first_name").val();
+            if (first_name_update.length == 0){
+                first_name_update = $("#first_name").attr('placeholder');
+            }
+            var last_name_update = $("#last_name").val();
+            if (last_name_update.length == 0){
+                last_name_update = $("#last_name").attr('placeholder');
+            }
+            var username_update = $("#username").val();
+            if (username_update.length == 0){
+                username_update = $("#username").attr('placeholder');
+            }
+            var email_update = $("#email").val();
+            if (email_update.length == 0){
+                email_update = $("#email").attr('placeholder');
+            }
+            console.log(first_name_update);
+            console.log(last_name_update);
+            console.log(username_update);
+            console.log(email_update);
+            var csrftoken = Cookies.get('csrftoken');
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'user_page' %}",
+                data: { first_name_update: first_name_update, 
+                        last_name_update: last_name_update,
+                        //username_update: username_update,
+                        email_update: email_update
+                    },
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response) {
+                    alert(' Informações atualizadas');
+                },
+                error: function (response) {
+                    alert('Erro ao atualizar', response);
+                }
+            }); 
+        });
+    });
+</script>
 
 {% endblock %}
