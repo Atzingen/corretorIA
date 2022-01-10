@@ -37,8 +37,10 @@ def registrar(request):
         messages.success(request, 'Você já está Registrado')
         return redirect('home')
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(data=request.POST)
+        print(request.POST)
         if form.is_valid():
+            print('is valid !')
             form.save()
             messages.success(request, 'Registro efetuado com sucesso !')
             return redirect('home')
@@ -54,6 +56,7 @@ def login_page(request):
         return redirect('home')
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
+        print(request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
