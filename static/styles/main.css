@@ -1,9 +1,13 @@
 body, .container{
-    background: #edecf0 no-repeat center center fixed;
+    background: #DFEEEA no-repeat center center fixed;
 }
 
 .navbar {
-    background-color: #52c91a;
+    background-color: #5E8B7E;
+}
+
+.container-inside {
+  background: #A7C4BC;
 }
 
 html {
