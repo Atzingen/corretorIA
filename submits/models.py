@@ -7,7 +7,7 @@ from django.conf import settings
 
 class User(AbstractUser):
     active_class = models.BooleanField(default=False)
-    profile_pic = models.ImageField(upload_to='static', null=True, blank=True)
+    profile_pic = models.ImageField(upload_to='profile', default='profile/avatar128.png', blank=True)
     RA = models.CharField(max_length=20, blank=False, null=False, default='RA0000')
 
     def __str__(self):

@@ -16,13 +16,16 @@
         crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel='stylesheet' type='text/css' media='screen' href='{% static "styles/main.css" %}'>
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel=“stylesheet”>
     {% block csstop %}{% endblock %}
     {% block jstop %}{% endblock %}
 
     </head>
     <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-gradient">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,8 +39,9 @@
                     <a class="nav-link active" href="/submit">Submeter</a>
                 </div>
                 <div class="navbar-nav ms-auto">
-                    <a href="/user_page" class="nav-link active">{{user.username}}</a>
-                    <a href="/logout" class="nav-link active"> logout </a>
+                    <a href="/logout" class="nav-link active"> <i class="bi bi-box-arrow-in-left"></i> logout </a>
+                    <a href="/user_page" class="nav-link active"> <img src="{{user.profile_pic.url}}" width="40" height="40" class="rounded-circle"></a>
+                    <a href="/user_page" class="nav-link active">  {{user.username}}</a>
                 </div>
                 {% else %}
                 <div class="navbar-nav">

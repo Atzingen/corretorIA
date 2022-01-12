@@ -5,64 +5,51 @@
 
 <div class="container rounded bg-white mt-5 mb-5">
     <h4 class="text-center">Cadastre-se </h4>
-    <div class="row">
-        <div class="col-md-4 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
-                <span class="font-weight-bold">fdfsdfsdf</span>
+    <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" type="file" id="formFile" name="profile_pic">
+                </div>
             </div>
-        </div>
-        <div class="col-md-8 border-right">
-            <form method="POST">
-                {% csrf_token %}
+            <div class="col-md-8 border-right">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p style="color: red;">* {{error}}</p>
+                    {% endfor %}
+                {% endfor %}
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">Username</label><input type="text" name="username" class="form-control" value=""></div>
+                    <div class="col-md-12"><label class="labels">Username<span style="color:red;">*</span></label><input type="text" name="username" class="form-control" value=""></div>
                 </div>
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">Nome</label><input type="text" name="first_name" class="form-control" value=""></div>
+                    <div class="col-md-12"><label class="labels">Nome<span style="color:red;">*</span></label><input type="text" name="first_name" class="form-control" value=""></div>
                 </div>
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">Sobrenome</label><input type="text" name="last_name" class="form-control"  value=""></div>
+                    <div class="col-md-12"><label class="labels">Sobrenome<span style="color:red;">*</span></label><input type="text" name="last_name" class="form-control"  value=""></div>
                 </div>
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">Email</label><input type="text" name="email" class="form-control" value=""></div>
+                    <div class="col-md-12"><label class="labels">Email<span style="color:red;">*</span></label><input type="text" name="email" class="form-control" value=""></div>
                 </div>
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">RA</label><input type="text" name="RA" class="form-control" value=""></div>
+                    <div class="col-md-12"><label class="labels">RA<span style="color:red;">*</span></label><input type="text" name="RA" class="form-control" value=""></div>
                 </div>
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">Senha</label><input type="password" name="password1" class="form-control" value=""></div>
+                    <div class="col-md-12"><label class="labels">Senha<span style="color:red;">*</span></label><input type="password" name="password1" class="form-control" value=""></div>
                 </div>
                 <div class="row mt-3">     
-                    <div class="col-md-12"><label class="labels">Digite novamente</label><input type="password" name="password2" class="form-control" value=""></div>
+                    <div class="col-md-12"><label class="labels">Digite novamente<span style="color:red;">*</span></label><input type="password" name="password2" class="form-control" value=""></div>
                 </div>
                 <div class="mt-5 text-center">
                     <button class="btn btn-primary profile-button" id="atualizar" type="button submit">Atualizar perfil</button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
-<!-- <div class="container">
-    <h2>Registrar</h2>
-    <p>Já tem uma conta ?  
-        <a href="{% url 'login' %}">Login</a>
-    </p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        username
-        first_name
-        last_name
-        email
-        RA
-        profile_pic
-        password1
-        password2
-        <button type="submit">Registrar</button>
-    </form>
-    {{form.errors}}
-</div> -->
 
 {% endblock %}
