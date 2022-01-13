@@ -34,22 +34,22 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 {% if user.is_authenticated %}
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="/atividades">Atividades</a>
-                    <a class="nav-link active" href="/notas">Minhas notas</a>
-                    <a class="nav-link active" href="/submit">Submeter</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'atividades' %}">Atividades</a>
+                    <a class="nav-link active" href="{% url 'notas' %}">Minhas notas</a>
+                    <a class="nav-link active" href="{% url 'submit' %}">Submeter</a>
                 </div>
                 <div class="navbar-nav ms-auto">
-                    <a href="/logout" class="nav-link active"> <i class="bi bi-box-arrow-in-left"></i> logout </a>
-                    <a href="/user_page" class="nav-link active"> <img src="{{user.profile_pic.url}}" width="40" height="40" class="rounded-circle"></a>
-                    <a href="/user_page" class="nav-link active">  {{user.username}}</a>
+                    <a href="{% url 'logout' %}" class="nav-link active"> <i class="bi bi-box-arrow-in-left"></i> logout </a>
+                    <a href="{% url 'user_page' %}" class="nav-link active"> <img src="{{user.profile_pic.url}}" width="40" height="40" class="rounded-circle"></a>
+                    <a href="{% url 'user_page' %}" class="nav-link active">  {{user.username}}</a>
                 </div>
                 {% else %}
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="/atividades">Atividades</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'atividades' %}">Atividades</a>
                 </div>
                 <div class="navbar-nav ms-auto">
-                    <a href="/registrar" class="nav-link active">Registrar</a>
-                    <a href="/login" class="nav-link active"> Login </a>
+                    <a href="{% url 'registrar' %}" class="nav-link active">Registrar</a>
+                    <a href="{% url 'login' %}" class="nav-link active"> Login </a>
                 </div>
                 {% endif %}
             </div>
@@ -60,7 +60,7 @@
         <div class="container">
             {% for message in messages %}
             <br>
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>

@@ -29,24 +29,24 @@ def user_page(request):
         print(form.is_valid())
         if form.is_valid():
             form.save()
-            messages.success(request, 'Perfil atualizado com sucesso')
+            messages.info(request, 'Perfil atualizado com sucesso')
         else:
             messages.error(request, 'Erro ao atualizar o perfil')
     return render(request, 'user_page.html')
 
 def registrar(request):
     if request.user.is_authenticated:
-        messages.success(request, 'Você já está Registrado')
+        messages.info(request, 'Você já está Registrado')
         return redirect('home')
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             print('is valid !')
             form.save()
-            messages.success(request, 'Registro efetuado com sucesso !')
+            messages.info(request, 'Registro efetuado com sucesso !')
             return redirect('home')
         else:
-            messages.success(request, 'Erro no preenchimento do formulário')
+            messages.info(request, 'Erro no preenchimento do formulário')
             context = {'form': form}
             return render(request, 'registrar.html', context)
     form = RegisterForm()
@@ -55,7 +55,7 @@ def registrar(request):
 
 def login_page(request):
     if request.user.is_authenticated:
-        messages.success(request, 'Você já está logado')
+        messages.info(request, 'Você já está logado')
         return redirect('home')
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -63,7 +63,7 @@ def login_page(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            messages.success(request, 'Login efetuado com sucesso !')
+            messages.info(request, 'Login efetuado com sucesso !')
             return redirect('home')
     form = AuthenticationForm()
     context = {'form': form}
@@ -72,8 +72,8 @@ def login_page(request):
 def logout(request):
     if request.user.is_authenticated:
         auth.logout(request)
-        messages.success(request, 'Logoff efetuado')
+        messages.info(request, 'Logoff efetuado')
         return render(request, 'home.html')
-    messages.success(request, 'Você ainda não fez Login')
+    messages.info(request, 'Você ainda não fez Login')
     return redirect('login')
     
