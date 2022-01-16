@@ -23,8 +23,6 @@ def submit(request):
 
 def user_page(request):
     if request.method == 'POST':
-        post = request.POST
-        user = User.objects.get(id=request.user.id)
         form = UpdataUserForm(request.POST, request.FILES, instance=request.user)
         print(form.is_valid())
         if form.is_valid():
