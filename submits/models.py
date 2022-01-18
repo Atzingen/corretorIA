@@ -22,17 +22,6 @@ class Grades(models.Model):
     def __str__(self):
         return f'{self.user_model} = {self.nota}' 
     
-class Submission(models.Model):
-    user_model = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    atividade = models.IntegerField() # alterar para relação com modelo Atividade
-    nota = models.FloatField()
-    partial = models.CharField(max_length=500)
-    debug_data = models.CharField(max_length=1000)
-    submit_time = models.DateField(default=timezone.now)
-    is_valid = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.nota)
 
 class Course(models.Model):
     name = models.CharField(max_length=500)
@@ -75,3 +64,17 @@ class Atividade(models.Model):
     tags = models.CharField(max_length=500)
     receiving_submissions = models.BooleanField()
 
+    def __str__(self):
+        return str(self.nota)
+
+class Submission(models.Model):
+    user_model = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    atividade = models.ForeignKey(Atividade, on_delete=models.CASCADE)
+    nota = models.FloatField()
+    partial = models.CharField(max_length=500)
+    debug_data = models.CharField(max_length=1000)
+    submit_time = models.DateField(default=timezone.now)
+    is_valid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.nota)
