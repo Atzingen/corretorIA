@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User, Grades, Submission
 
 class RegisterForm(UserCreationForm):
-
     def clean_RA(self):
         print("debug - form validation")
         data = self.cleaned_data['RA']
