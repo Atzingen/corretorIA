@@ -1,7 +1,7 @@
 /* //https://colorhunt.co/palette/2f5d625e8b7ea7c4bcdfeeea */
 
 body, .container{
-    background: #dfeeea no-repeat center center fixed;
+    background: #ddebe7 no-repeat center center fixed;
 }
 
 .navbar {
@@ -9,7 +9,7 @@ body, .container{
 }
 
 .container-inside {
-  background: #A7C4BC;
+  background: #ddebe7;
 }
 
 html {

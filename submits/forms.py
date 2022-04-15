@@ -6,10 +6,7 @@ from .models import User, Grades, Submission
 
 class RegisterForm(UserCreationForm):
     def clean_RA(self):
-        print("debug - form validation")
         data = self.cleaned_data['RA']
-        print(data)
-        print(type(data))
         if not isinstance(data, str):
             raise ValidationError("RA não está no formato RAxxxxx")
         if len(data) < 5:

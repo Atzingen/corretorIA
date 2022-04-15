@@ -37,6 +37,9 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'atividades' %}">Atividades</a>
                     <a class="nav-link active" href="{% url 'notas' %}">Minhas notas</a>
                     <a class="nav-link active" href="{% url 'submit' %}">Submeter</a>
+                    {% if user.is_superuser %}
+                        <a class="nav-link active" href="/admin">Admin Panel</a>
+                    {% endif %}
                 </div>
                 <div class="navbar-nav ms-auto">
                     <a href="{% url 'logout' %}" class="nav-link active"> <i class="bi bi-box-arrow-in-left"></i> logout </a>

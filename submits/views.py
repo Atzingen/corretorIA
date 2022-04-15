@@ -39,7 +39,6 @@ def registrar(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            print('is valid !')
             form.save()
             messages.info(request, 'Registro efetuado com sucesso !')
             return redirect('home')
