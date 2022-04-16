@@ -14,6 +14,7 @@ def home(request):
     return render(request, 'home.html')
 
 def atividades(request):
+    utils.list_videos('PL5QiubluDtEf6dPP2EgUMx1dz65Go1_F-')
     if request.method == 'POST' and request.FILES['file']:
         script = request.FILES['file']
         fs = FileSystemStorage(location='static/scripts')
@@ -21,9 +22,9 @@ def atividades(request):
         request.session['submited_file'] = filename
     elif 'process_script' in request.GET:
         print(request.GET)
-        return StreamingHttpResponse(utils.hello())
+        response = StreamingHttpResponse(utils.hello(), status=200, content_type='text/event-stream')
+        return response
         # return HttpResponse("hello")
-        # print(f'processando o script {request.GET.get(["process_script"])}')
     return render(request, 'atividades.html')
 
 def notas(request):

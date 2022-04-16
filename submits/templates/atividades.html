@@ -34,26 +34,77 @@
             </div>
         </div>
     </div>
+
+    <div class="mt-3 mb-3">
+        <div class="progress d-none" id="progress-all">
+            <div class="progress-bar bg-success visible" id="progressbar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+    <table class="table table-hover d-none" id="resultstable">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Função</th>
+            <th scope="col">Informações</th>
+            <th scope="col">% Acertos</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+
 </div>
 
 <script>
+
+    $(document).ready(function() {
+        // $('#progress-all').toggleClass('visible');
+    });
+
+    function clear_results(){
+        $('#progress-all').addClass('d-none'); 
+        $('#resultstable').addClass('d-none'); 
+        $('#resultstable tbody td').remove()
+        $('.progress-bar').css('width', 0+'%').attr('aria-valuenow', 0);
+    }
+
+    $('#clear-dropzone').click(function(){
+        clear_results();
+    });
+
     // https://stackoverflow.com/questions/49391687/render-current-status-only-on-template-in-streaminghttpresponse-in-django
     $('#submit-file').click(function(){
+        $('#progress-all').removeClass('d-none'); 
+        $('#resultstable').removeClass('d-none'); 
+        $('.progress-bar').css('width', 0+'%').attr('aria-valuenow', 0);
+        var partial_data = '';
         $.ajax({
             url: "/atividades", //{% url 'atividades' %}
             data: {'process_script': 1},
             xhrFields: {
                 onprogress: function (e) { 
-                    console.log(e);
+                    var full_data = e.currentTarget.response;
+                    if (full_data.length > 0){
+                        var new_data = full_data.replace(partial_data, '');
+                        data = JSON.parse(new_data);
+                        console.log('full: ' + full_data);
+                        console.log('partial ' + partial_data);
+                        console.log('new ' + new_data);
+                        console.log('eval ' + data);
+                        console.log('---------------------')
+                        if ('value' in data){
+                            $('.progress-bar').css('width', 10*parseInt(data['value'])+'%').attr('aria-valuenow', 10*parseInt(data['value']));
+                            var row = $("<tr><td>1</td><td>E</td><td>E</td><td>E</td></tr>");
+                            $('#resultstable tbody').append(row);
+                        }
+                        partial_data = full_data;
+                    }
                 }
             },
             dataType: "text", 
-            done: function(data){
-                console.log(data);
-                alert(done);
-            },
             success: function(response){
-                console.log(response)
+                // console.log(response)
             },
         });
     });
@@ -66,12 +117,11 @@
         dictFallbackMessage: "Erro do browser. Utilize Mozilla ou Chrome",
         dictInvalidFileType: "O tipo do arquivo não está correto",
         accept: function(file, done) {
-            if (file.name == "justinbieber.jpg") {
-                done("Naha, you don't.");
+            if (file.name.includes(" ")) {
+                done("Não coloque espaço ou caracteres especiais no script");
             }
             else { done(); }
         },
-
         init: function() {
                 this.on("sending", function(file) {
                 console.log('Sending the file' +  file.name)
