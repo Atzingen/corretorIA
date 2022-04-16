@@ -1,17 +1,29 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.core.files.storage import FileSystemStorage
 
 from .forms import RegisterForm, User, UpdataUserForm
+from .corretor import utils
 
 def home(request):
     return render(request, 'home.html')
 
 def atividades(request):
+    if request.method == 'POST' and request.FILES['file']:
+        script = request.FILES['file']
+        fs = FileSystemStorage(location='static/scripts')
+        filename = fs.save(script.name.replace('.py', '') + utils.make_salt(16) + '.py', script)
+        request.session['submited_file'] = filename
+    elif 'process_script' in request.GET:
+        print(request.GET)
+        return StreamingHttpResponse(utils.hello())
+        # return HttpResponse("hello")
+        # print(f'processando o script {request.GET.get(["process_script"])}')
     return render(request, 'atividades.html')
 
 def notas(request):

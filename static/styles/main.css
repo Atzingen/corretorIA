@@ -1,16 +1,28 @@
 /* //https://colorhunt.co/palette/2f5d625e8b7ea7c4bcdfeeea */
 
-body, .container{
-    background: #ddebe7 no-repeat center center fixed;
+/* https://www.colourlovers.com/palette/359978/w_o_r_d_l_e_s_s_. */
+:root {
+  --navcolor: #1C140D;
+  --strongaccent: #CBE86B;
+  --navtext: #F2E9E1;
+  --background: #FFFFFF;
 }
 
-.navbar {
-    background-color: #5E8B7E;
+body, .container{
+    background: var(--background) no-repeat center center fixed;
 }
 
 .container-inside {
-  background: #ddebe7;
+  background: var(--background);
 }
+
+.navbar {
+    background-color: #1C140D;
+}
+
+.navbar a {
+  color: #F2E9E1 !important;
+  }
 
 html {
     /* default font-size is 16px - this is set in the default browser stylesheet */ 

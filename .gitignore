@@ -9,6 +9,9 @@ __pycache__/
 # venv file
 .env
 
+# temporary script to be evaluated
+static/scripts/*
+
 # C extensions
 *.so
 
