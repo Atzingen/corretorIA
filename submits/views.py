@@ -24,7 +24,6 @@ def atividades(request):
         print(request.GET)
         response = StreamingHttpResponse(utils.hello(), status=200, content_type='text/event-stream')
         return response
-        # return HttpResponse("hello")
     return render(request, 'atividades.html')
 
 def notas(request):
