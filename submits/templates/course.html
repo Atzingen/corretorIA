@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="container">
+
+    <h1 class="mt-4 mb-4 text-center" style="color: var(--strongaccent)">
+        {{dados.name}}
+    </h1>
+    <h2 class="mt-4 mb-4">
+        {{dados.short_description}}
+    </h2>
+    <h3 class="mt-4 mb-4">
+        {{dados.long_description}}
+    </h3>
+    <div class="container">
+        <div class="row">
+            {% for d in dados.videos_data %}
+            <div class="card col-lg-4 col-sm-6 mt-2 mb-2 mr-2 ml-2">
+                <div class="embed-responsive embed-responsive-16by9 mt-2">
+                    <img src="{{d.image}}" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                    <p> {{d.title}} </p>
+                    <a href="{{d.url}}" target="_blank"> youtube </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

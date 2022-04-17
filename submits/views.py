@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
@@ -7,14 +8,35 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.storage import FileSystemStorage
 
+from submits.models import *
 from .forms import RegisterForm, User, UpdataUserForm
 from .corretor import utils
 
 def home(request):
-    return render(request, 'home.html')
+    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'inscriptions_open', 
+                                         'active', 'start_date', 'end_date', 'youtube', 'github').order_by('-inscriptions_open', 'start_date'))
+    context = {'dados': dados}
+    return render(request, 'home.html', context)
+
+def course(request, id):
+    dados = Course.objects.filter(id=id).values('name', 'id', 'short_description', 
+                   'long_description', 'inscriptions_open', 'active', 'start_date', 
+                   'end_date', 'youtube', 'github').order_by('-inscriptions_open', 
+                   'start_date')[0]
+    videos_data = utils.list_videos(dados['youtube'].split('=')[-1])
+    dados['videos_data'] = videos_data
+    context = {'dados': dados}
+    return render(request, 'course.html', context)
 
 def atividades(request):
-    utils.list_videos('PL5QiubluDtEf6dPP2EgUMx1dz65Go1_F-')
+    return render(request, 'atividades.html')
+
+@login_required(login_url='login')
+def notas(request):
+    return render(request, 'notas.html')
+
+# @login_required(login_url='login')
+def submit(request):
     if request.method == 'POST' and request.FILES['file']:
         script = request.FILES['file']
         fs = FileSystemStorage(location='static/scripts')
@@ -24,15 +46,9 @@ def atividades(request):
         print(request.GET)
         response = StreamingHttpResponse(utils.hello(), status=200, content_type='text/event-stream')
         return response
-    return render(request, 'atividades.html')
-
-def notas(request):
-    return render(request, 'notas.html')
-
-@login_required(login_url='login')
-def submit(request):
     return render(request, 'submit.html')
 
+@login_required(login_url='login')
 def user_page(request):
     if request.method == 'POST':
         form = UpdataUserForm(request.POST, request.FILES, instance=request.user)
@@ -78,11 +94,9 @@ def login_page(request):
     context = {'form': form}
     return render(request, 'login.html', context=context)
 
+@login_required(login_url='login')
 def logout(request):
-    if request.user.is_authenticated:
-        auth.logout(request)
-        messages.info(request, 'Logoff efetuado')
-        return render(request, 'home.html')
-    messages.info(request, 'Você ainda não fez Login')
-    return redirect('login')
+    auth.logout(request)
+    messages.info(request, 'Logoff efetuado')
+    return redirect('home')
     

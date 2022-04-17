@@ -34,6 +34,7 @@ AUTH_USER_MODEL = 'submits.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'submits.apps.SubmitsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
