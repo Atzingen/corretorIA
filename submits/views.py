@@ -1,4 +1,5 @@
 from multiprocessing import context
+from re import A
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
@@ -28,8 +29,27 @@ def course(request, id):
     context = {'dados': dados}
     return render(request, 'course.html', context)
 
+@login_required(login_url='login')
 def atividades(request):
-    return render(request, 'atividades.html')
+    ids_activities_receiving_submissions = list(request.user.course_set.filter(activity__receiving_submissions=True).values(
+        "activity__id").values_list("activity__id", flat=True))
+    ids_activities_notreceiving_submissions = list(request.user.course_set.filter(activity__receiving_submissions=False).values(
+        "activity__id").values_list("activity__id", flat=True))
+    active_activities = Activity.objects.filter(id__in=ids_activities_receiving_submissions)
+    inactive_activities = Activity.objects.filter(id__in=ids_activities_notreceiving_submissions)
+    print(active_activities)
+    print(inactive_activities)
+    context = {
+        'active': active_activities,
+        'inactive': inactive_activities
+    }
+    return render(request, 'atividades.html', context=context)
+
+@login_required(login_url='login')
+def script_templates(request, template_name):
+    print(template_name)
+    # return the py file: https://fedingo.com/how-to-download-file-in-django/
+    return render(request, 'notas.html')
 
 @login_required(login_url='login')
 def notas(request):

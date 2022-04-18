@@ -2,7 +2,8 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -10,20 +11,16 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel='stylesheet' type='text/css' media='screen' href='{% static "styles/main.css" %}'>
-    <link href="https://fonts.googleapis.com/css?family=Oswald" rel=“stylesheet”>
-    {% block csstop %}{% endblock %}
-    {% block jstop %}{% endblock %}
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel=“stylesheet”> {% block csstop %}{% endblock %} {% block jstop %}{% endblock %}
 
-    </head>
-    <body>
+</head>
+
+<body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-gradient">
         <div class="container-fluid">
@@ -34,22 +31,24 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 {% if user.is_authenticated %}
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{% url 'atividades' %}">Atividades</a>
-                    <a class="nav-link active" href="{% url 'notas' %}">Minhas notas</a>
-                    <a class="nav-link active" href="{% url 'submit' %}">Submeter</a>
-                    {% if user.is_superuser %}
-                        <a class="nav-link active" href="/admin">Admin Panel</a>
-                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Area do Aluno
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <a class="nav-link active" href="{% url 'user_page' %}"> Meus Dados </a>
+                            <a class="nav-link active" aria-current="page" href="{% url 'atividades' %}">Atividades</a>
+                            <a class="nav-link active" href="{% url 'notas' %}">Notas</a>
+                            <a class="nav-link active" href="{% url 'submit' %}">Submeter</a>
+                        </ul>
+                    </li>
                 </div>
                 <div class="navbar-nav ms-auto">
+                    {% if user.is_superuser %}<a class="nav-link active" href="/admin">Admin Panel</a> {% endif %}
                     <a href="{% url 'logout' %}" class="nav-link active"> <i class="bi bi-box-arrow-in-left"></i> logout </a>
-                    <a href="{% url 'user_page' %}" class="nav-link active"> <img src="{{user.profile_pic.url}}" width="40" height="40" class="rounded-circle"></a>
-                    <a href="{% url 'user_page' %}" class="nav-link active">  {{user.username}}</a>
+                    <a href="{% url 'user_page' %}" class="nav-link active"> <img src="{{user.profile_pic.url}}" width="40" height="40" class="rounded-circle"> &nbsp {{user.username}}</a>
                 </div>
                 {% else %}
-                <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{% url 'atividades' %}">Atividades</a>
-                </div>
                 <div class="navbar-nav ms-auto">
                     <a href="{% url 'registrar' %}" class="nav-link active">Registrar</a>
                     <a href="{% url 'login' %}" class="nav-link active"> Login </a>
@@ -60,32 +59,29 @@
     </nav>
 
     {% if messages %}
-        <div class="container">
-            {% for message in messages %}
-            <br>
-            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endfor %}
+    <div class="container">
+        {% for message in messages %}
+        <br>
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    {% endif %}
-    
-    {% block content %}{% endblock %}
+        {% endfor %}
+    </div>
+    {% endif %} {% block content %}{% endblock %}
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            // alert message delete after 5 seconds
-            window.setTimeout(function() {
-                $(".alert").fadeTo(1000, 0).slideUp(1000, function(){
-                    $(this).remove(); 
+        $(document).ready(function() {
+            window.setTimeout(function() { // alert message delete after 5 seconds
+                $(".alert").fadeTo(1000, 0).slideUp(1000, function() {
+                    $(this).remove();
                 });
-            }, 5000);  
-            
+            }, 5000);
             // Other js functions goes here
         });
     </script>
     {% block jsbotton %}{% endblock %}
 
-    </body>
+</body>
+
 </html>

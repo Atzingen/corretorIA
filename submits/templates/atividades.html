@@ -1,8 +1,49 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
-<div>
+<style type="text/css">
+    .h-divider {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        height: 1px;
+        width: 100%;
+        border-top: 1px solid gray;
+    }
+</style>
+
+<div class="container">
 
     <h1 class="text-center mt-5"> Atividades</h1>
+
+    <h3 class="text-center mt-5"> Ativas</h3>
+
+    {% for atividade in active %}
+    <h5 class="mt-3"> Atividade: {{atividade}} </h5>
+    <p> Curso: {{atividade.course}} </p>
+    <p> Descrição: {{atividade.short_description}} </p>
+    <p> Data limite: {{atividade.end_date}} </p>
+    <p> Template: <a href="/script_templates/{{atividade.template_script}}" download>{{atividade.template_script}}</a> </p>
+    {% if atividade.errata %}
+    <p> Errata: {{atividade.errata}} </p>
+    {% endif %}
+    <a class="btn btn-success mb-3" href="{% url 'submit' %}" role="button">Submeter resposta</a>
+    <div class="h-divider"></div>
+    {% endfor %}
+
+
+    <h3 class="text-center mt-5"> Terminadas</h3>
+
+    {% for atividade in inactive %}
+    <h5 class="mt-3"> Atividade: {{atividade}} </h5>
+    <p> Curso: {{atividade.course}} </p>
+    <p> Descrição: {{atividade.short_description}} </p>
+    <p> Template: <a href="/script_templates/{{atividade.template_script}}" download>{{atividade.template_script}}</a> </p>
+    <p> Gabarito: <a href="/script_templates/{{atividade.perfect_script}}" download>{{atividade.perfect_script}}</a> </p>
+    {% if atividade.errata %}
+    <p> Errata: {{atividade.errata}} </p>
+    {% endif %}
+    <div class="h-divider"></div>
+    {% endfor %}
+
 
 </div>
 

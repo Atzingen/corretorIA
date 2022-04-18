@@ -1,19 +1,26 @@
 /* //https://colorhunt.co/palette/2f5d625e8b7ea7c4bcdfeeea */
 
+
 /* https://www.colourlovers.com/palette/359978/w_o_r_d_l_e_s_s_. */
+
 :root {
-  --navcolor: #1C140D;
-  --strongaccent: #CBE86B;
-  --navtext: #F2E9E1;
-  --background: #FFFFFF;
+    --navcolor: #1C140D;
+    --strongaccent: #CBE86B;
+    --navtext: #F2E9E1;
+    --background: #FFFFFF;
 }
 
-body, .container{
+body,
+.container {
     background: var(--background) no-repeat center center fixed;
 }
 
 .container-inside {
-  background: var(--background);
+    background: var(--background);
+}
+
+.dropdown-menu {
+    background-color: #1C140D;
 }
 
 .navbar {
@@ -21,20 +28,22 @@ body, .container{
 }
 
 .navbar a {
-  color: #F2E9E1 !important;
-  }
+    color: #F2E9E1 !important;
+}
 
 html {
-    /* default font-size is 16px - this is set in the default browser stylesheet */ 
-    font-size: 20px; 
-    font-weight: 400; 
-    line-height: 1.5; 
-  } 
-   
-  /* Increase all font sizes on mobile */ 
-  @media (max-width: 767px) { 
-    html { 
-      /* default is 1rem or 16px */ 
-      font-size: 25px; 
-    } 
-  }
+    /* default font-size is 16px - this is set in the default browser stylesheet */
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+
+/* Increase all font sizes on mobile */
+
+@media (max-width: 767px) {
+    html {
+        /* default is 1rem or 16px */
+        font-size: 25px;
+    }
+}
