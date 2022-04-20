@@ -1,5 +1,5 @@
 from multiprocessing import context
-from re import A
+from importlib import import_module
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
@@ -8,10 +8,13 @@ from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.storage import FileSystemStorage
+from submits.corretor import run_tests
+from submits.corretor.correction_scripts import test_functions
 
 from submits.models import *
 from .forms import RegisterForm, User, UpdataUserForm
 from .corretor import utils
+from .corretor import correction_scripts
 
 def home(request):
     dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'inscriptions_open', 
@@ -55,16 +58,16 @@ def script_templates(request, template_name):
 def notas(request):
     return render(request, 'notas.html')
 
-# @login_required(login_url='login')
+@login_required
 def submit(request):
     if request.method == 'POST' and request.FILES['file']:
         script = request.FILES['file']
-        fs = FileSystemStorage(location='static/scripts')
+        fs = FileSystemStorage(location='submits/corretor/submit_scripts')
         filename = fs.save(script.name.replace('.py', '') + utils.make_salt(16) + '.py', script)
         request.session['submited_file'] = filename
     elif 'process_script' in request.GET:
-        print(request.GET)
-        response = StreamingHttpResponse(utils.hello(), status=200, content_type='text/event-stream')
+        module = import_module('submits.corretor.submit_scripts.' + request.session['submited_file'].strip('.py'))
+        response = StreamingHttpResponse(test_functions.test_all(module, request.user), status=200, content_type='text/event-stream')
         return response
     return render(request, 'submit.html')
 
@@ -72,7 +75,6 @@ def submit(request):
 def user_page(request):
     if request.method == 'POST':
         form = UpdataUserForm(request.POST, request.FILES, instance=request.user)
-        print(form.is_valid())
         if form.is_valid():
             form.save()
             messages.info(request, 'Perfil atualizado com sucesso')

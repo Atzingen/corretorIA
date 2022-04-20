@@ -51,7 +51,6 @@ class Activity(models.Model):
     def __str__(self):
         return str(self.short_description)
 
-
 class Grades(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     activity = models.ForeignKey(Activity, default=1, on_delete=models.CASCADE)

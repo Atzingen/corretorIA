@@ -40,7 +40,6 @@
     <table class="table table-hover d-none" id="resultstable">
         <thead>
             <tr>
-                <th scope="col"></th>
                 <th scope="col">Função</th>
                 <th scope="col">Informações</th>
                 <th scope="col">% Acertos</th>
@@ -84,16 +83,21 @@
                     var full_data = e.currentTarget.response;
                     if (full_data.length > 0) {
                         var new_data = full_data.replace(partial_data, '');
-                        data = JSON.parse(new_data);
-                        console.log('full: ' + full_data);
-                        console.log('partial ' + partial_data);
+                        data = JSON.parse(new_data.replace(/'/g, '"'));
                         console.log('new ' + new_data);
                         console.log('eval ' + data);
                         console.log('---------------------')
-                        if ('value' in data) {
-                            $('.progress-bar').css('width', 10 * parseInt(data['value']) + '%').attr('aria-valuenow', 10 * parseInt(data['value']));
-                            var row = $("<tr><td>1</td><td>E</td><td>E</td><td>E</td></tr>");
+                        if ('partial' in data) {
+                            $('.progress-bar').css('width', String(data.partial[2]) + ' %').attr('aria-valuenow', data.partial[2]);
+                            if (data.partial[3] == 'OK') {
+                                data.partial[3] = '<i class="bi bi-check" style="color:green"></i>';
+                            }
+                            var row = $("<tr><td>" + data.partial[0] + "</td><td>" + data.partial[3] + "</td><td>" + data.partial[1] + "</td></tr>");
                             $('#resultstable tbody').append(row);
+                        } else if ('Nota' in data) {
+                            var row = $("<tr><td> Nota Final</td><td> OK </td><td>" + data.Nota + " / 10.0 </td></tr>");
+                            $('#resultstable tbody').append(row);
+                            $('.progress-bar').css('width', '100 %').attr('aria-valuenow', 100);
                         }
                         partial_data = full_data;
                     }
