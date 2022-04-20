@@ -166,7 +166,7 @@ def test_all(model, user):
             nota_parcial += n
             yield {'partial': [f.__name__, str(100*n) + '%', 100*(i+1)/len(functions), msg]}
             time.sleep(1)
-        submission.score = 10*n
+        submission.score = 10*nota_parcial/len(etapas)
     else:
         submission.is_valid = False   
     if function_format is not 'OK':

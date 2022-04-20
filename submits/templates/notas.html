@@ -1,8 +1,16 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
-<div>
-
+<div class="container">
     <h1 class="text-center mt-5"> Notas </h1>
+
+    {% for curso, atividades in data.items %}
+        <h3>Curso: {{ curso }}</h3>
+        {% for atividade, nota in atividades.items  %}
+            <p>{{ atividade }}</p>
+            <p> Nota: {{ nota.score__max }}</p>
+        {% endfor %}
+        <br>
+    {% endfor %}
 
 </div>
 

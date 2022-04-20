@@ -8,6 +8,9 @@ from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.storage import FileSystemStorage
+from requests import session
+from django.db.models import Max
+
 from submits.corretor import run_tests
 from submits.corretor.correction_scripts import test_functions
 
@@ -40,8 +43,6 @@ def atividades(request):
         "activity__id").values_list("activity__id", flat=True))
     active_activities = Activity.objects.filter(id__in=ids_activities_receiving_submissions)
     inactive_activities = Activity.objects.filter(id__in=ids_activities_notreceiving_submissions)
-    print(active_activities)
-    print(inactive_activities)
     context = {
         'active': active_activities,
         'inactive': inactive_activities
@@ -56,7 +57,18 @@ def script_templates(request, template_name):
 
 @login_required(login_url='login')
 def notas(request):
-    return render(request, 'notas.html')
+    courses_list = Course.objects.filter(user=request.user)
+    activities_list = []
+    best_score = []
+    score_info = {}
+    for course in courses_list:
+        activities_list.append(Activity.objects.filter(course=course))
+        score_info[course.name] = {}
+        for activitie in activities_list[-1]:
+            best_score.append(Submission.objects.filter(activity=activitie, user=request.user).aggregate(Max("score")))
+            score_info[course.name][activitie.name] = Submission.objects.filter(activity=activitie, user=request.user).aggregate(Max("score"))
+    print(score_info)
+    return render(request, 'notas.html', context={'data':score_info})
 
 @login_required
 def submit(request):
