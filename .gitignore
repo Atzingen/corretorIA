@@ -6,7 +6,11 @@ __pycache__/
 # Mac os ignore folder ds_store
 .DS_Store
 
-# venv file
+# virtual env folder
+.venv
+.venv/*
+
+# env file
 .env
 
 # sqlite file
