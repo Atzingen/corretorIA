@@ -30,12 +30,6 @@ def list_videos(playlist_id):
         except:
             pass
     return videos_data
-    
-def hello():
-    yield '{"start": 1}' 
-    for i in range(1, 11):
-        time.sleep(0.2)
-        yield '{"value": ' + str(i) + ' }' 
 
 def clean_submit_scripts():
     pass

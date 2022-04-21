@@ -9,6 +9,9 @@ __pycache__/
 # venv file
 .env
 
+# sqlite file
+data.db
+
 # temporary submit files
 submits/corretor/submit_scripts/*
 

@@ -1,3 +1,5 @@
+import os 
+
 from multiprocessing import context
 from importlib import import_module
 from django.shortcuts import render, redirect
@@ -8,9 +10,10 @@ from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.storage import FileSystemStorage
-from requests import session
 from django.db.models import Max
+import mimetypes
 
+from requests import session
 from submits.corretor import run_tests
 from submits.corretor.correction_scripts import test_functions
 
@@ -50,10 +53,14 @@ def atividades(request):
     return render(request, 'atividades.html', context=context)
 
 @login_required(login_url='login')
-def script_templates(request, template_name):
-    print(template_name)
-    # return the py file: https://fedingo.com/how-to-download-file-in-django/
-    return render(request, 'notas.html')
+def script_download(request, file_name, *args, **kwargs):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    filepath = BASE_DIR + '\\static\\images\\scripts\\template_scripts\\template_atv1_2022_05N9e8J.py' #+ file_name.split('/')[-1]
+    path = open(filepath, 'r', encoding='utf-8')
+    mime_type, _ = mimetypes.guess_type(filepath)
+    response = HttpResponse(path, content_type=mime_type)
+    response['Content-Disposition'] = "attachment; filename=%s" % file_name
+    return response
 
 @login_required(login_url='login')
 def notas(request):

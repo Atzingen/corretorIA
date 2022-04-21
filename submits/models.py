@@ -43,13 +43,13 @@ class Activity(models.Model):
     end_date = models.DateField()
     tags = models.CharField(max_length=500, null=True)
     receiving_submissions = models.BooleanField()
-    template_script = models.CharField(max_length=500)
-    correction_script = models.CharField(max_length=500)
-    perfect_script = models.CharField(max_length=500)
+    template_script = models.FileField(upload_to ='scripts/template_scripts/')
+    correction_script = models.FileField(upload_to ='scripts/correction_scripts/')
+    perfect_script = models.FileField(upload_to ='scripts/perfect_scripts/')
     errata = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
-        return str(self.short_description)
+        return str(self.name)
 
 class Grades(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
