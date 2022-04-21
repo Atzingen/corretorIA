@@ -13,7 +13,6 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import Max
 import mimetypes
 
-from requests import session
 from submits.corretor import run_tests
 from submits.corretor.correction_scripts import test_functions
 
