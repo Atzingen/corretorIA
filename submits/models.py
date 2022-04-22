@@ -26,7 +26,7 @@ class Course(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     active = models.BooleanField()
-    inscriptions_open = models.BooleanField()
+    subscription_open = models.BooleanField()
     youtube = models.CharField(max_length=100)
     github = models.CharField(max_length=100, null=True, blank=True)
 

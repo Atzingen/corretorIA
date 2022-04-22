@@ -22,15 +22,19 @@ from .corretor import utils
 from .corretor import correction_scripts
 
 def home(request):
-    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'inscriptions_open', 
-                                         'active', 'start_date', 'end_date', 'youtube', 'github').order_by('-inscriptions_open', 'start_date'))
+    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open', 
+                                         'active', 'start_date', 'end_date', 'youtube', 'github').order_by('-subscription_open', 'start_date'))
     context = {'dados': dados}
     return render(request, 'home.html', context)
 
+def subscribe(request, course):
+    messages.success(request, 'Inscrição efetuada !')
+    return redirect('home')
+
 def course(request, id):
     dados = Course.objects.filter(id=id).values('name', 'id', 'short_description', 
-                   'long_description', 'inscriptions_open', 'active', 'start_date', 
-                   'end_date', 'youtube', 'github').order_by('-inscriptions_open', 
+                   'long_description', 'subscription_open', 'active', 'start_date', 
+                   'end_date', 'youtube', 'github').order_by('-subscription_open', 
                    'start_date')[0]
     videos_data = utils.list_videos(dados['youtube'].split('=')[-1])
     dados['videos_data'] = videos_data
@@ -73,7 +77,6 @@ def notas(request):
         for activitie in activities_list[-1]:
             best_score.append(Submission.objects.filter(activity=activitie, user=request.user).aggregate(Max("score")))
             score_info[course.name][activitie.name] = Submission.objects.filter(activity=activitie, user=request.user).aggregate(Max("score"))
-    print(score_info)
     return render(request, 'notas.html', context={'data':score_info})
 
 @login_required

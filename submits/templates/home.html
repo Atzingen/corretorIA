@@ -22,16 +22,15 @@
                     <p> <i class="bi bi-calendar3"></i> Iníco: {{dado.start_date}} Fim: {{dado.end_date}} </p>
                     <p> Status do curso: {% if dado.active %} <i class="bi bi-check-lg" style="color: green"></i> Ativo {% else %} <i class="bi bi-x-lg" style="color: red"></i> Terminado {% endif %} </p>
                     <p> <i class="bi bi-arrow-right-square-fill"></i> <a href="{% url 'course' dado.id %}"> Ir para o curso</a> </p>
-                    <p> <i class="bi bi-github"></i> <a href="{{dado.github}}"> Github </a></p>
-                    <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}"> Youtube </a></p>
-                    {% if dado.inscriptions_open %}
-                    <a class="btn btn-success" href="/inscriptions" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
+                    <p> <i class="bi bi-github"></i> <a href="{{dado.github}}" target="_blank"> Github </a></p>
+                    <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}" target="_blank"> Youtube </a></p>
+                    {% if dado.subscription_open %}
+                    <a class="btn btn-success" href="{% url 'subscribe' dado.id %}" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
-
 </div>
 
 {% endblock %}
