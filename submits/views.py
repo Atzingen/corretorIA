@@ -149,7 +149,7 @@ def logout(request):
 @csrf_exempt
 def webhook(request):
     print('webhook request arrived')
-    threading.Thread(target=lambda: [time.sleep(4), os.system('systemctl --user start django2.service')]).start()
+    threading.Thread(target=lambda: [time.sleep(4), os.system('systemctl --user restart django2.service')]).start()
     # sig_header = 'X-Hub-Signature-256'
     # if sig_header in request.headers:
     #     header_splitted = request.headers[sig_header].split("=")
