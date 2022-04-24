@@ -164,4 +164,4 @@ def webhook(request):
             #         threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart django.service')]).start()
             # else:
             #     return 'secret did not match'
-    return "ok"   
+    return HttpResponse('OK', content_type='text/plain')
