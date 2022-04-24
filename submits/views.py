@@ -1,4 +1,4 @@
-import os 
+import os, time
 import hmac, hashlib
 import threading
 from multiprocessing import context
@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Max
+from django.views.decorators.csrf import csrf_exempt
 import mimetypes
 
 from submits.corretor import run_tests
@@ -145,9 +146,11 @@ def logout(request):
     messages.info(request, 'Logoff efetuado')
     return redirect('home')
     
+@csrf_exempt
 def webhook(request):
     print('webhook request arrived')
     print(request)
+    threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart django.service')]).start()
     # sig_header = 'X-Hub-Signature-256'
     # if sig_header in request.headers:
     #     header_splitted = request.headers[sig_header].split("=")
@@ -159,7 +162,7 @@ def webhook(request):
             #     if app.debug:
             #         threading.Thread(target=lambda: [time.sleep(4), os._exit(-1)]).start() 
             #     else:
-            #         threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart flask-pbi.service')]).start()
+            #         threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart django.service')]).start()
             # else:
             #     return 'secret did not match'
     return "ok"   

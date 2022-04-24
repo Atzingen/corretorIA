@@ -16,7 +16,7 @@ urlpatterns = [
     path('registrar', views.registrar, name='registrar'),
     path('login', views.login_page, name='login'),
     path('logout', views.logout, name='logout'),
-    path('webhook', views.webhook, name='webhook'),
+    path('webhook_6404466046', views.webhook, name='webhook'),
     path('reset_password_send/', auth_views.PasswordResetDoneView.as_view(template_name="password_reset_done.html"), name="password_reset_done"),
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="password_reset.html"), name="password_reset"),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="password_reset_confirm.html"), name="password_reset_confirm"),
