@@ -148,3 +148,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # youtube api
 YOUTUBE_API = config('YOUTUBE_API')
+
+# github webhook key
+GITHUB_WEBHOOK_KEY = config('GITHUB_WEBHOOK_KEY')

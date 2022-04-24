@@ -1,7 +1,9 @@
 import os 
-
+import hmac, hashlib
+import threading
 from multiprocessing import context
 from importlib import import_module
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
@@ -143,3 +145,21 @@ def logout(request):
     messages.info(request, 'Logoff efetuado')
     return redirect('home')
     
+def webhook(request):
+    print('webhook request arrived')
+    print(request)
+    # sig_header = 'X-Hub-Signature-256'
+    # if sig_header in request.headers:
+    #     header_splitted = request.headers[sig_header].split("=")
+    #     if len(header_splitted) == 2:
+    #         req_sign = header_splitted[1]
+    #         computed_sign = hmac.new(os.environ.get('GIT_WEBHOOK').encode(), request.data, hashlib.sha256).hexdigest()
+    #         if hmac.compare_digest(req_sign, computed_sign):
+    #             print("new version, rebooting now")
+            #     if app.debug:
+            #         threading.Thread(target=lambda: [time.sleep(4), os._exit(-1)]).start() 
+            #     else:
+            #         threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart flask-pbi.service')]).start()
+            # else:
+            #     return 'secret did not match'
+    return "ok"   
