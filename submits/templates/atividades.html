@@ -17,11 +17,11 @@
     <h3 class="text-center mt-5 text-primary"> ativas</h3>
 
     {% for atividade in active %}
-    <h5 class="mt-3"> Atividade: {{atividade}} </h5>
-    <p> Curso: {{atividade.course}} </p>
-    <p> Descrição: {{atividade.short_description}} </p>
-    <p> Data limite: {{atividade.end_date}} </p>
-    <p> Template: <a href="/script_download/template_atv1.py" download>{{atividade.template_script}}</a> </p>
+        <h5 class="mt-3"> Atividade: {{atividade}} </h5>
+        <p> Curso: {{atividade.course}} </p>
+        <p> Descrição: {{atividade.short_description}} </p>
+        <p> Data limite: {{atividade.end_date}} </p>
+        <p> Template: <a href="/script_download/template_atv1.py" download>{{atividade.template_script}}</a> </p>
     {% if atividade.errata %}
     <p> Errata: {{atividade.errata}} </p>
     {% endif %}
