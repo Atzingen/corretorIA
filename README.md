@@ -4,7 +4,7 @@ Sistema para armazenamento e gerenciamento de cursos online com foco em corre√ß√
 
 Pode ser testado em [site](http://34.145.193.118:8080/)
 
-Desenvolvido em Python 3.9 com o framework Django. 
+Desenvolvido em Python 3.10 com o framework Django. 
 
 ![Alt Text](https://media.giphy.com/media/Mx0f1YCgPxx0YP4rjL/giphy.gif)
 
