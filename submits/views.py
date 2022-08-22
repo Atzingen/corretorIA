@@ -89,7 +89,9 @@ def submit(request):
         fs = FileSystemStorage(location='submits/corretor/submit_scripts')
         filename = fs.save(script.name.replace('.py', '') + utils.make_salt(16) + '.py', script)
         request.session['submited_file'] = filename
+        # print(f'Submited file: {filename}')
     elif 'process_script' in request.GET:
+        # print(f'correcting file: {request.session["submited_file"]}')
         module = import_module('submits.corretor.submit_scripts.' + request.session['submited_file'].strip('.py'))
         response = StreamingHttpResponse(test_functions.test_all(module, request.user), status=200, content_type='text/event-stream')
         return response
