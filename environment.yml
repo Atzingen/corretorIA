@@ -106,4 +106,4 @@ dependencies:
   - pip:
     - django-jazzmin==2.5.0
     - tzdata==2022.1
-prefix: C:\Users\gustavo\anaconda3\envs\corretor
+prefix: /home/lucykav/corretorIA
