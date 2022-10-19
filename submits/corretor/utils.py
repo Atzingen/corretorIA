@@ -16,7 +16,7 @@ def list_videos(playlist_id):
     request = youtube.playlistItems().list(
         part = "snippet",
         playlistId = playlist_id,
-        maxResults = 50
+        maxResults = 50  # what is the reason for this limit?
     )
     response = request.execute()
     videos_data = []
