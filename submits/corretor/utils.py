@@ -15,9 +15,9 @@ def make_salt(size=16, chars=None):
 def list_videos(playlist_id):
     youtube = build("youtube", "v3", developerKey=YOUTUBE_API)
     request = youtube.playlistItems().list(
-        part="snippet",
-        playlistId=playlist_id,
-        maxResults=50
+        part = "snippet",
+        playlistId = playlist_id,
+        maxResults = 50
     )
     response = request.execute()
     videos_data = []
