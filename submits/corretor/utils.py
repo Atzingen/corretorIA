@@ -23,9 +23,10 @@ def list_videos(playlist_id):
     videos_data = []
     for video_data in response["items"]:
         try:
-            videos_data.append(get_video_data_snippet(video_data, "standard"))
-        except KeyError:
-            videos_data.append(get_video_data_snippet(video_data, "default"))
+            if "standard" in video_data['snippet']['thumbnails']:
+                videos_data.append(get_video_data_snippet(video_data, "standard"))
+            elif "default" in video_data['snippet']['thumbnails']:
+                videos_data.append(get_video_data_snippet(video_data, "default"))
         except:
             pass
     return videos_data
