@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container">
+
+    <h1 class="mt-4 mb-4 text-center" style="color: var(--strongaccent)"> Bem vindo !</h1>
+    <h2 class="mt-4 mb-4">
+        Vejam os cursos disponíveis (em andamento e já finalizados) na lista abaixo. Clique em um curso para ver os detalhes e links para os vídeos.
+    </h2>
+
+    <div class="accordion" id="accordion">
+        {% for dado in dados %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{forloop.counter}}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#item{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                    {{dado.name}}
+                </button>
+            </h2>
+            <div id="item{{forloop.counter}}" class="accordion-collapse collapse {% if forloop.counter == 1 %} show {% endif %}" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordion">
+                <div class="card-body">
+                    <p> {{dado.short_description}} </p>
+                    <p> {{dado.long_description}} </p>
+                    <p> <i class="bi bi-calendar3"></i> Iníco: {{dado.start_date}} Fim: {{dado.end_date}} </p>
+                    <p> Status do curso: {% if dado.active %} <i class="bi bi-check-lg" style="color: green"></i> Ativo {% else %} <i class="bi bi-x-lg" style="color: red"></i> Terminado {% endif %} </p>
+                    <p> <i class="bi bi-arrow-right-square-fill"></i> <a href="{% url 'course' dado.id %}"> Ir para o curso</a> </p>
+                    <p> <i class="bi bi-github"></i> <a href="{{dado.github}}" target="_blank"> Github </a></p>
+                    <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}" target="_blank"> Youtube </a></p>
+                    {% if dado.subscription_open %}
+                    <a class="btn btn-success" href="{% url 'subscribe' dado.id %}" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
