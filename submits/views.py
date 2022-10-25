@@ -51,15 +51,14 @@ def my_courses(request):
     courses_in_progress = []
     courses_done = []
     waiting_courses = []
-    my_courses = Course.objects.filter(user=request.user).values('name', 'id', 'short_description',
-                                                            'long_description', 'subscription_open', 'active',
-                                                            'start_date',
-                                                            'end_date', 'youtube', 'github').order_by(
-                                                            '-subscription_open',
-                                                            'start_date')[0]
+
+    my_courses = list(Course.objects.filter(user=request.user).values('name', 'id', 'short_description', 'long_description', 'subscription_open',
+                                             'active', 'start_date', 'end_date', 'youtube', 'github').order_by(
+                                            '-subscription_open', 'start_date'))
+
     for my_course in my_courses:
-        if my_course.end_date >= date.today():
-            if my_course.start_date <= date.today(): courses_in_progress.append(my_course)
+        if my_course['end_date'] >= date.today():
+            if my_course['start_date'] <= date.today(): courses_in_progress.append(my_course)
             else: waiting_courses.append(my_course)
         else:
             courses_done.append(my_course)
