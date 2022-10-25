@@ -25,7 +25,7 @@ from .corretor import utils
 from .corretor import correction_scripts
 
 def home(request):
-    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open', 
+    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open',
                                          'active', 'start_date', 'end_date', 'youtube', 'github').order_by('-subscription_open', 'start_date'))
     context = {'dados': dados}
     return render(request, 'home.html', context)
@@ -43,6 +43,21 @@ def course(request, id):
     dados['videos_data'] = videos_data
     context = {'dados': dados}
     return render(request, 'course.html', context)
+
+
+@login_required(login_url='login')
+def my_courses(request):
+    dados = Course.objects.filter(user=request.user).values('name', 'id', 'short_description',
+                                                            'long_description', 'subscription_open', 'active',
+                                                            'start_date',
+                                                            'end_date', 'youtube', 'github').order_by(
+                                                            '-subscription_open',
+                                                            'start_date')[0]
+    videos_data = utils.list_videos(dados['youtube'].split('=')[-1])
+    dados['videos_data'] = videos_data
+    context = {'dados': dados}
+    return render(request, 'my_courses.html', context)
+
 
 @login_required(login_url='login')
 def atividades(request):
