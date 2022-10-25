@@ -4,6 +4,7 @@ import threading
 from multiprocessing import context
 from importlib import import_module
 from django.conf import settings
+from datetime import date
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
@@ -47,15 +48,28 @@ def course(request, id):
 
 @login_required(login_url='login')
 def my_courses(request):
-    dados = Course.objects.filter(user=request.user).values('name', 'id', 'short_description',
+    courses_in_progress = Course.objects.filter(user=request.user, active=True, end_date__gte=date.today(), start_date__lte=date.today()).values('name', 'id', 'short_description',
                                                             'long_description', 'subscription_open', 'active',
                                                             'start_date',
                                                             'end_date', 'youtube', 'github').order_by(
                                                             '-subscription_open',
                                                             'start_date')[0]
-    videos_data = utils.list_videos(dados['youtube'].split('=')[-1])
-    dados['videos_data'] = videos_data
-    context = {'dados': dados}
+    courses_done = Course.objects.filter(user=request.user, active=False, end_date__lte=date.today()).values('name', 'id', 'short_description',
+                                                                 'long_description', 'subscription_open', 'active',
+                                                                 'start_date',
+                                                                 'end_date', 'youtube', 'github').order_by(
+                                                                '-subscription_open',
+                                                                'start_date')[0]
+    waiting_courses = Course.objects.filter(user=request.user, start_date__gte=date.today()).values('name', 'id', 'short_description',
+                                                                 'long_description', 'subscription_open', 'active',
+                                                                 'start_date',
+                                                                 'end_date', 'youtube', 'github').order_by(
+                                                                '-subscription_open',
+                                                                'start_date')[0]
+
+    context = {'active': courses_in_progress,
+               'done': courses_done,
+               'waiting': waiting_courses}
     return render(request, 'my_courses.html', context)
 
 
