@@ -11,6 +11,7 @@ def make_salt(size=16, chars=None):
         )
     return ''.join(random.choice(chars) for x in range(size))
 
+
 def list_videos(playlist_id):
     youtube = build("youtube", "v3", developerKey=YOUTUBE_API)
     request = youtube.playlistItems().list(
@@ -22,14 +23,23 @@ def list_videos(playlist_id):
     videos_data = []
     for video_data in response["items"]:
         try:
-            videos_data.append({
-                'title': video_data['snippet']['title'],
-                'image': video_data['snippet']['thumbnails']["standard"]["url"],
-                'url': 'https://www.youtube.com/watch?v=' + video_data['snippet']['thumbnails']["standard"]["url"].split("/")[-2]
-                })
+            if "standard" in video_data['snippet']['thumbnails']:
+                videos_data.append(get_video_data_snippet(video_data, "standard"))
+            elif "default" in video_data['snippet']['thumbnails']:
+                videos_data.append(get_video_data_snippet(video_data, "default"))
         except:
             pass
     return videos_data
+
+
+def get_video_data_snippet(video_data: dict, key: str):
+    return {
+        'title': video_data['snippet']['title'],
+        'image': video_data['snippet']['thumbnails'][key]["url"],
+        'url': 'https://www.youtube.com/watch?v=' +
+               video_data['snippet']['thumbnails'][key]["url"].split("/")[-2]
+    }
+
 
 def clean_submit_scripts():
     pass
