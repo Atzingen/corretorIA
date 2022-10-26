@@ -34,10 +34,10 @@ def list_videos(playlist_id):
 
 def get_video_data_snippet(video_data: dict, key: str):
     return {
-        'title': video_data['snippet']['title'],
-        'image': video_data['snippet']['thumbnails'][key]["url"],
+        'title': video_data.get('snippet').get('title'),
+        'image': video_data.get('snippet').get('thumbnails').get(key, '').get("url", ''),
         'url': 'https://www.youtube.com/watch?v=' +
-               video_data['snippet']['thumbnails'][key]["url"].split("/")[-2]
+               video_data.get('snippet').get('thumbnails').get(key, '').get("url", '').split("/")[-2]
     }
 
 
