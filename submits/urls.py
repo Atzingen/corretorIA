@@ -13,6 +13,7 @@ urlpatterns = [
     path('submit', views.submit, name='submit'),
     path('script_download/<file_name>', views.script_download, name='script_download'),
     path('user_page', views.user_page, name='user_page'),
+    path('meus_cursos', views.my_courses, name='meus_cursos'),
     path('registrar', views.registrar, name='registrar'),
     path('login', views.login_page, name='login'),
     path('logout', views.logout, name='logout'),
