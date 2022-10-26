@@ -1,34 +1,138 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
+
+<style type="text/css">
+    .my_courses_tabs {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 50px auto;
+        padding: 25px;
+    }
+
+    .my_courses_tabs input[type="radio"] {
+        display: none;
+    }
+
+    .my_courses_tabs label {
+        padding: 25px;
+        background: #e2e2e2;
+        font-weight: bold;
+    }
+
+    .my_courses_tabs label:hover {
+        cursor: pointer;
+    }
+
+    .my_courses_tabs .tab {
+        width: 100%;
+        padding: 20px;
+        background: #fff;
+        order: 1;
+        display: none;
+    }
+
+    .my_courses_tabs input[type="radio"]:checked + label + .tab {
+        display: block;
+    }
+
+    .my_courses_tabs input[type="radio"]:checked + label {
+        background: #fff;
+    }
+
+</style>
+
 <div class="container">
 
-    <h1 class="mt-4 mb-4 text-center" style="color: var(--strongaccent)"> Bem vindo !</h1>
-    <h2 class="mt-4 mb-4">
-        Vejam os cursos disponíveis (em andamento e já finalizados) na lista abaixo. Clique em um curso para ver os detalhes e links para os vídeos.
+    <h2 class="text-center mt-4 mb-4">
+        Meus cursos
     </h2>
 
     <div class="accordion" id="accordion">
-        {% for dado in dados %}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="heading{{forloop.counter}}">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#item{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
-                    {{dado.name}}
-                </button>
-            </h2>
-            <div id="item{{forloop.counter}}" class="accordion-collapse collapse {% if forloop.counter == 1 %} show {% endif %}" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordion">
-                <div class="card-body">
-                    <p> {{dado.short_description}} </p>
-                    <p> {{dado.long_description}} </p>
-                    <p> <i class="bi bi-calendar3"></i> Iníco: {{dado.start_date}} Fim: {{dado.end_date}} </p>
-                    <p> Status do curso: {% if dado.active %} <i class="bi bi-check-lg" style="color: green"></i> Ativo {% else %} <i class="bi bi-x-lg" style="color: red"></i> Terminado {% endif %} </p>
-                    <p> <i class="bi bi-arrow-right-square-fill"></i> <a href="{% url 'course' dado.id %}"> Ir para o curso</a> </p>
-                    <p> <i class="bi bi-github"></i> <a href="{{dado.github}}" target="_blank"> Github </a></p>
-                    <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}" target="_blank"> Youtube </a></p>
-                    {% if dado.subscription_open %}
-                    <a class="btn btn-success" href="{% url 'subscribe' dado.id %}" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
+        <!-- Navbar -->
+        <nav id="my_courses_navbar" class="my_courses_tabs">
+            <input type="radio" id="tab_cursando" name="my_courses_tabs" checked="checked">
+            <label for="tab_cursando">Cursando</label>
+            <div class="tab">
+                <h3 id="cursando" class="mt-4 mb-4">Cursando</h3>
+                {% for dado in courses_in_progress %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{forloop.counter}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#item{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                            {{dado.name}}
+                        </button>
+                    </h2>
+                    <div id="item{{forloop.counter}}" class="accordion-collapse collapse {% if forloop.counter == 1 %} show {% endif %}" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordion">
+                        <div class="card-body">
+                            <p> {{dado.short_description}} </p>
+                            <p> {{dado.long_description}} </p>
+                            <p> <i class="bi bi-calendar3"></i> Iníco: {{dado.start_date}} Fim: {{dado.end_date}} </p>
+                            <p> Status do curso: {% if dado.active %} <i class="bi bi-check-lg" style="color: green"></i> Ativo {% else %} <i class="bi bi-x-lg" style="color: red"></i> Terminado {% endif %} </p>
+                            <p> <i class="bi bi-arrow-right-square-fill"></i> <a href="{% url 'course' dado.id %}"> Ir para o curso</a> </p>
+                            <p> <i class="bi bi-github"></i> <a href="{{dado.github}}" target="_blank"> Github </a></p>
+                            <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}" target="_blank"> Youtube </a></p>
+                            {% if dado.subscription_open %}
+                            <a class="btn btn-success" href="{% url 'subscribe' dado.id %}" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-        </div>
-        {% endfor %}
+
+            <input type="radio" id="tab_finalizados" name="my_courses_tabs">
+            <label for="tab_finalizados">Finalizados</label>
+            <div class="tab">
+                <h3 id="finalizados" class="mt-4 mb-4">Finalizados</h3>
+                {% for dado in courses_done %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{forloop.counter}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#item{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                            {{dado.name}}
+                        </button>
+                    </h2>
+                    <div id="item{{forloop.counter}}" class="accordion-collapse collapse {% if forloop.counter == 1 %} show {% endif %}" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordion">
+                        <div class="card-body">
+                            <p> {{dado.short_description}} </p>
+                            <p> {{dado.long_description}} </p>
+                            <p> <i class="bi bi-calendar3"></i> Iníco: {{dado.start_date}} Fim: {{dado.end_date}} </p>
+                            <p> Status do curso: {% if dado.active %} <i class="bi bi-check-lg" style="color: green"></i> Ativo {% else %} <i class="bi bi-x-lg" style="color: red"></i> Terminado {% endif %} </p>
+                            <p> <i class="bi bi-arrow-right-square-fill"></i> <a href="{% url 'course' dado.id %}"> Ir para o curso</a> </p>
+                            <p> <i class="bi bi-github"></i> <a href="{{dado.github}}" target="_blank"> Github </a></p>
+                            <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}" target="_blank"> Youtube </a></p>
+                            {% if dado.subscription_open %}
+                            <a class="btn btn-success" href="{% url 'subscribe' dado.id %}" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <input type="radio" id="tab_aguardando" name="my_courses_tabs">
+            <label for="tab_aguardando">Aguardando início</label>
+            <div class="tab">
+                <h3 id="aguardando" class="mt-4 mb-4">Aguardando Início</h3>
+                {% for dado in waiting_courses %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{forloop.counter}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#item{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                            {{dado.name}}
+                        </button>
+                    </h2>
+                    <div id="item{{forloop.counter}}" class="accordion-collapse collapse {% if forloop.counter == 1 %} show {% endif %}" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordion">
+                        <div class="card-body">
+                            <p> {{dado.short_description}} </p>
+                            <p> {{dado.long_description}} </p>
+                            <p> <i class="bi bi-calendar3"></i> Iníco: {{dado.start_date}} Fim: {{dado.end_date}} </p>
+                            <p> Status do curso: {% if dado.active %} <i class="bi bi-check-lg" style="color: green"></i> Ativo {% else %} <i class="bi bi-x-lg" style="color: red"></i> Terminado {% endif %} </p>
+                            <p> <i class="bi bi-arrow-right-square-fill"></i> <a href="{% url 'course' dado.id %}"> Ir para o curso</a> </p>
+                            <p> <i class="bi bi-github"></i> <a href="{{dado.github}}" target="_blank"> Github </a></p>
+                            <p> <i class="bi bi-youtube"></i> <a href="{{dado.youtube}}" target="_blank"> Youtube </a></p>
+                            {% if dado.subscription_open %}
+                            <a class="btn btn-success" href="{% url 'subscribe' dado.id %}" role="button"><i class="bi bi-check-square"></i> Inscrever </a> {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </nav>
     </div>
 </div>
 

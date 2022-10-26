@@ -52,20 +52,25 @@ def my_courses(request):
     courses_done = []
     waiting_courses = []
 
-    my_courses = list(Course.objects.filter(user=request.user).values('name', 'id', 'short_description', 'long_description', 'subscription_open',
-                                             'active', 'start_date', 'end_date', 'youtube', 'github').order_by(
-                                            '-subscription_open', 'start_date'))
+    my_courses_list = list(
+        Course.objects.filter(user=request.user).values('name', 'id', 'short_description', 'long_description',
+                                                        'subscription_open',
+                                                        'active', 'start_date', 'end_date', 'youtube',
+                                                        'github').order_by(
+            '-subscription_open', 'start_date'))
 
-    for my_course in my_courses:
+    for my_course in my_courses_list:
         if my_course['end_date'] >= date.today():
-            if my_course['start_date'] <= date.today(): courses_in_progress.append(my_course)
-            else: waiting_courses.append(my_course)
+            if my_course['start_date'] <= date.today():
+                courses_in_progress.append(my_course)
+            else:
+                waiting_courses.append(my_course)
         else:
             courses_done.append(my_course)
 
-    context = {'active': courses_in_progress,
-               'done': courses_done,
-               'waiting': waiting_courses}
+    context = {'courses_in_progress': courses_in_progress,
+               'courses_done': courses_done,
+               'waiting_courses': waiting_courses}
     return render(request, 'my_courses.html', context)
 
 
