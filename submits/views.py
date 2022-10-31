@@ -4,6 +4,7 @@ import threading
 from multiprocessing import context
 from importlib import import_module
 from django.conf import settings
+from datetime import date
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.contrib.auth.decorators import login_required
@@ -25,7 +26,7 @@ from .corretor import utils
 from .corretor import correction_scripts
 
 def home(request):
-    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open', 
+    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open',
                                          'active', 'start_date', 'end_date', 'youtube', 'github').order_by('-subscription_open', 'start_date'))
     context = {'dados': dados}
     return render(request, 'home.html', context)
@@ -43,6 +44,35 @@ def course(request, id):
     dados['videos_data'] = videos_data
     context = {'dados': dados}
     return render(request, 'course.html', context)
+
+
+@login_required(login_url='login')
+def my_courses(request):
+    courses_in_progress = []
+    courses_done = []
+    waiting_courses = []
+
+    my_courses_list = list(
+        Course.objects.filter(user=request.user).values('name', 'id', 'short_description', 'long_description',
+                                                        'subscription_open',
+                                                        'active', 'start_date', 'end_date', 'youtube',
+                                                        'github').order_by(
+            '-subscription_open', 'start_date'))
+
+    for my_course in my_courses_list:
+        if my_course['end_date'] >= date.today():
+            if my_course['start_date'] <= date.today():
+                courses_in_progress.append(my_course)
+            else:
+                waiting_courses.append(my_course)
+        else:
+            courses_done.append(my_course)
+
+    context = {'courses_in_progress': courses_in_progress,
+               'courses_done': courses_done,
+               'waiting_courses': waiting_courses}
+    return render(request, 'my_courses.html', context)
+
 
 @login_required(login_url='login')
 def atividades(request):
