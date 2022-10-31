@@ -23,16 +23,16 @@ def list_videos(playlist_id):
     videos_data = []
     for video_data in response["items"]:
         try:
-            if "standard" in video_data.get('snippet', '').get('thumbnails', ''):
+            if "standard" in video_data['snippet']['thumbnails']:
                 key = "standard"
             else:
                 key = "default"
 
             videos_data.append({
-                'title': video_data.get('snippet', '').get('title', ''),
-                'image': video_data.get('snippet', '').get('thumbnails', '').get(key, '').get("url", ''),
+                'title': video_data['snippet']['title'],
+                'image': video_data['snippet']['thumbnails'].get(key, '').get("url", ''),
                 'url': 'https://www.youtube.com/watch?v=' +
-                       video_data.get('snippet', '').get('thumbnails', '').get(key, '').get("url", '').split("/")[-2]
+                       video_data['snippet']['thumbnails'].get(key, '').get("url", '').split("/")[-2]
             })
         except:
             pass
