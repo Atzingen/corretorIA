@@ -23,22 +23,21 @@ def list_videos(playlist_id):
     videos_data = []
     for video_data in response["items"]:
         try:
-            if "standard" in video_data['snippet']['thumbnails']:
-                videos_data.append(get_video_data_snippet(video_data, "standard"))
-            elif "default" in video_data['snippet']['thumbnails']:
-                videos_data.append(get_video_data_snippet(video_data, "default"))
+            if "standard" in video_data.get('snippet', '').get('thumbnails', ''):
+                key = "standard"
+            else:
+                key = "default"
+
+            videos_data.append({
+                'title': video_data.get('snippet', '').get('title', ''),
+                'image': video_data.get('snippet', '').get('thumbnails', '').get(key, '').get("url", ''),
+                'url': 'https://www.youtube.com/watch?v=' +
+                       video_data.get('snippet', '').get('thumbnails', '').get(key, '').get("url", '').split("/")[-2]
+            })
         except:
             pass
     return videos_data
 
-
-def get_video_data_snippet(video_data: dict, key: str):
-    return {
-        'title': video_data.get('snippet').get('title'),
-        'image': video_data.get('snippet').get('thumbnails').get(key, '').get("url", ''),
-        'url': 'https://www.youtube.com/watch?v=' +
-               video_data.get('snippet').get('thumbnails').get(key, '').get("url", '').split("/")[-2]
-    }
 
 
 def clean_submit_scripts():
