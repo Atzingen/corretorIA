@@ -25,25 +25,67 @@ from .forms import RegisterForm, User, UpdataUserForm
 from .corretor import utils
 from .corretor import correction_scripts
 
+
 def home(request):
-    dados =  list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open',
-                                         'active', 'start_date', 'end_date', 'youtube', 'github').order_by('-subscription_open', 'start_date'))
+    dados = list(Course.objects.all().values('name', 'id', 'short_description', 'long_description', 'subscription_open',
+                                             'active', 'start_date', 'end_date', 'youtube', 'github').order_by(
+        '-subscription_open', 'start_date'))
     context = {'dados': dados}
     return render(request, 'home.html', context)
+
 
 def subscribe(request, course):
     messages.success(request, 'Inscrição efetuada !')
     return redirect('home')
 
+
 def course(request, id):
-    dados = Course.objects.filter(id=id).values('name', 'id', 'short_description', 
-                   'long_description', 'subscription_open', 'active', 'start_date', 
-                   'end_date', 'youtube', 'github').order_by('-subscription_open', 
-                   'start_date')[0]
+    dados = Course.objects.filter(id=id).values('name', 'id', 'short_description',
+                                                'long_description', 'subscription_open', 'active', 'start_date',
+                                                'end_date', 'youtube', 'github').order_by('-subscription_open',
+                                                                                          'start_date')[0]
     videos_data = utils.list_videos(dados['youtube'].split('=')[-1])
     dados['videos_data'] = videos_data
     context = {'dados': dados}
     return render(request, 'course.html', context)
+
+
+@login_required(login_url='login')
+def my_course(request, id):
+    dados = Course.objects.filter(id=id).values('name', 'id', 'short_description',
+                                                'long_description', 'subscription_open', 'active', 'start_date',
+                                                'end_date', 'youtube', 'github').order_by('-subscription_open',
+                                                                                          'start_date')[0]
+
+    if dados['end_date'] >= date.today():
+        if dados['start_date'] <= date.today():
+            status = "Cursando"
+        else:
+            status = "Aguardando início"
+    else:
+        status = "Finalizado"
+
+    ids_activities_receiving_submissions = list(
+        request.user.course_set.filter(id=id, activity__receiving_submissions=True).values(
+            "activity__id").values_list("activity__id", flat=True))
+    atividades = Activity.objects.filter(id__in=ids_activities_receiving_submissions)
+
+    submissions = {}
+    deadlines = {}
+
+    for atividade in atividades:
+        submissions[f"{atividade.name}"] = Submission.objects.filter(user=request.user, activity=atividade).values\
+                                                ('activity', 'score', 'is_valid', 'submit_time')
+        if not submissions[f"{atividade.name}"]:
+            deadlines[f"{atividade.name}"] = atividade.end_date
+
+    context = {'dados': dados,
+               'status': status,
+               'atividades': atividades,
+               'submissions': submissions,
+               'deadlines': deadlines
+               }
+    return render(request, 'my_course.html', context)
 
 
 @login_required(login_url='login')
@@ -76,10 +118,12 @@ def my_courses(request):
 
 @login_required(login_url='login')
 def atividades(request):
-    ids_activities_receiving_submissions = list(request.user.course_set.filter(activity__receiving_submissions=True).values(
-        "activity__id").values_list("activity__id", flat=True))
-    ids_activities_notreceiving_submissions = list(request.user.course_set.filter(activity__receiving_submissions=False).values(
-        "activity__id").values_list("activity__id", flat=True))
+    ids_activities_receiving_submissions = list(
+        request.user.course_set.filter(activity__receiving_submissions=True).values(
+            "activity__id").values_list("activity__id", flat=True))
+    ids_activities_notreceiving_submissions = list(
+        request.user.course_set.filter(activity__receiving_submissions=False).values(
+            "activity__id").values_list("activity__id", flat=True))
     active_activities = Activity.objects.filter(id__in=ids_activities_receiving_submissions)
     inactive_activities = Activity.objects.filter(id__in=ids_activities_notreceiving_submissions)
     context = {
@@ -88,15 +132,17 @@ def atividades(request):
     }
     return render(request, 'atividades.html', context=context)
 
+
 @login_required(login_url='login')
 def script_download(request, file_name, *args, **kwargs):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    filepath = BASE_DIR + '\\static\\images\\scripts\\template_scripts\\template_atv1_2022_05N9e8J.py' #+ file_name.split('/')[-1]
+    filepath = BASE_DIR + '\\static\\images\\scripts\\template_scripts\\template_atv1_2022_05N9e8J.py'  # + file_name.split('/')[-1]
     path = open(filepath, 'r', encoding='utf-8')
     mime_type, _ = mimetypes.guess_type(filepath)
     response = HttpResponse(path, content_type=mime_type)
     response['Content-Disposition'] = "attachment; filename=%s" % file_name
     return response
+
 
 @login_required(login_url='login')
 def notas(request):
@@ -109,8 +155,11 @@ def notas(request):
         score_info[course.name] = {}
         for activitie in activities_list[-1]:
             best_score.append(Submission.objects.filter(activity=activitie, user=request.user).aggregate(Max("score")))
-            score_info[course.name][activitie.name] = Submission.objects.filter(activity=activitie, user=request.user).aggregate(Max("score"))
-    return render(request, 'notas.html', context={'data':score_info})
+            score_info[course.name][activitie.name] = Submission.objects.filter(activity=activitie,
+                                                                                user=request.user).aggregate(
+                Max("score"))
+    return render(request, 'notas.html', context={'data': score_info})
+
 
 @login_required
 def submit(request):
@@ -121,9 +170,11 @@ def submit(request):
         request.session['submited_file'] = filename
     elif 'process_script' in request.GET:
         module = import_module('submits.corretor.submit_scripts.' + request.session['submited_file'].strip('.py'))
-        response = StreamingHttpResponse(test_functions.test_all(module, request.user), status=200, content_type='text/event-stream')
+        response = StreamingHttpResponse(test_functions.test_all(module, request.user), status=200,
+                                         content_type='text/event-stream')
         return response
     return render(request, 'submit.html')
+
 
 @login_required(login_url='login')
 def user_page(request):
@@ -135,6 +186,7 @@ def user_page(request):
         else:
             messages.error(request, 'Erro ao atualizar o perfil')
     return render(request, 'user_page.html')
+
 
 def registrar(request):
     if request.user.is_authenticated:
@@ -154,6 +206,7 @@ def registrar(request):
     context = {'form': form}
     return render(request, 'registrar.html', context)
 
+
 def login_page(request):
     if request.user.is_authenticated:
         messages.info(request, 'Você já está logado')
@@ -170,12 +223,14 @@ def login_page(request):
     context = {'form': form}
     return render(request, 'login.html', context=context)
 
+
 @login_required(login_url='login')
 def logout(request):
     auth.logout(request)
     messages.info(request, 'Logoff efetuado')
     return redirect('home')
-    
+
+
 @csrf_exempt
 def webhook(request):
     print('webhook request arrived')
@@ -188,10 +243,10 @@ def webhook(request):
     #         computed_sign = hmac.new(os.environ.get('GIT_WEBHOOK').encode(), request.data, hashlib.sha256).hexdigest()
     #         if hmac.compare_digest(req_sign, computed_sign):
     #             print("new version, rebooting now")
-            #     if app.debug:
-            #         threading.Thread(target=lambda: [time.sleep(4), os._exit(-1)]).start() 
-            #     else:
-            #         threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart django.service')]).start()
-            # else:
-            #     return 'secret did not match'
+    #     if app.debug:
+    #         threading.Thread(target=lambda: [time.sleep(4), os._exit(-1)]).start()
+    #     else:
+    #         threading.Thread(target=lambda: [time.sleep(4), os.system('sudo systemctl restart django.service')]).start()
+    # else:
+    #     return 'secret did not match'
     return HttpResponse('OK', content_type='text/plain')
