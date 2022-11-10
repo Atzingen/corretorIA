@@ -14,14 +14,15 @@
     {% endif %}
     <h3>Status: {{status}}</h3>
 
-    <h4>Deadlines</h4>
+    <h3 class="text-center mt-5 text-primary"> Deadlines </h3>
     <div class="container">
         <div class="row">
             {% for a in atividades %}
-            <div class="card col-lg-4 col-sm-6 mt-2 mb-2 mr-2 ml-2">
+            <div class="card col-lg-10 col-sm-10 mt-2 mb-2 mr-2 ml-2">
                 <div class="card-body">
-                    <h4> {{a.name}} </h4>
-                    <p>Data de entrega: {{a.end_date}}</p>
+                    <h5>{{a.end_date}}</h5>
+                    <h6> {{a.name}} </h6>
+                    <a class="btn btn-success mb-3" href="{% url 'submit' %}" role="button">Submeter resposta</a>
                 </div>
             </div>
             {% endfor %}
