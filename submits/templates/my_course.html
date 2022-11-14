@@ -4,9 +4,9 @@
     <h1 class="mt-4 mb-4 text-center" style="color: var(--strongaccent)">
         {{dados.name}}
     </h1>
-    <h2 class="mt-4 mb-4">
+    <h3 class="mt-4 mb-4">
         {{dados.short_description}}
-    </h2>
+    </h3>
     {% if dados.long_description %}
         <h3 class="mt-4 mb-4">
             {{dados.long_description}}
@@ -14,15 +14,20 @@
     {% endif %}
     <h3>Status: {{status}}</h3>
 
-    <h3 class="text-center mt-5 text-primary"> Deadlines </h3>
+    <h3 class="mt-5 text-primary"> Datas de entrega das próximas atividades </h3>
     <div class="container">
         <div class="row">
-            {% for a in atividades %}
-            <div class="card col-lg-10 col-sm-10 mt-2 mb-2 mr-2 ml-2">
+            {% for date, activities in deadlines.items %}
+            <div class="card mt-2 mb-2 mr-2 ml-2">
                 <div class="card-body">
-                    <h5>{{a.end_date}}</h5>
-                    <h6> {{a.name}} </h6>
-                    <a class="btn btn-success mb-3" href="{% url 'submit' %}" role="button">Submeter resposta</a>
+                    <h6>{{date}}</h6>
+                    {% for activity in activities %}
+                        <a href="{% url 'submit' %}"><h6 class="mt-3">Atividade: {{activity.name}} </h6></a>
+                        <p> Curso: {{activity.course.name}} </p>
+                        <p> Descrição: {{activity.short_description}} </p>
+                        <p> Data limite: {{activity.end_date}} </p>
+                        <p> Template: <a href="/script_download/template_atv1.py" download>{{activity.template_script}}</a> </p>
+                    {% endfor %}
                 </div>
             </div>
             {% endfor %}

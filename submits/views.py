@@ -68,16 +68,18 @@ def my_course(request, id):
     ids_activities_receiving_submissions = list(
         request.user.course_set.filter(id=id, activity__receiving_submissions=True).values(
             "activity__id").values_list("activity__id", flat=True))
-    atividades = Activity.objects.filter(id__in=ids_activities_receiving_submissions)
+    atividades = Activity.objects.filter(id__in=ids_activities_receiving_submissions).order_by('end_date')
 
     submissions = {}
     deadlines = {}
-
+    # TODO: Histórico de notas = submissions das atividades PASSADAS, já entregues, not receiving submissions
     for atividade in atividades:
         submissions[f"{atividade.name}"] = Submission.objects.filter(user=request.user, activity=atividade).values\
                                                 ('activity', 'score', 'is_valid', 'submit_time')
-        if not submissions[f"{atividade.name}"]:
-            deadlines[f"{atividade.name}"] = atividade.end_date
+        if len(submissions[f"{atividade.name}"]) == 0:
+            if not(deadlines.get(f"{atividade.end_date}", '')):
+                deadlines[f"{atividade.end_date}"] = []
+            deadlines[f"{atividade.end_date}"].append(atividade)
 
     context = {'dados': dados,
                'status': status,
