@@ -22,16 +22,24 @@
                 <div class="card-body">
                     <h6>{{date}}</h6>
                     {% for activity in activities %}
-                        <a href="{% url 'submit' %}"><h6 class="mt-3">Atividade: {{activity.name}} </h6></a>
-                        <p> Curso: {{activity.course.name}} </p>
-                        <p> Descrição: {{activity.short_description}} </p>
-                        <p> Data limite: {{activity.end_date}} </p>
+                        <hr/>
+                        <h6 class="mt-3">Atividade: {{activity.name}} </h6>
                         <p> Template: <a href="/script_download/template_atv1.py" download>{{activity.template_script}}</a> </p>
+                        <a href="{% url 'submit' %}"><p>Link para submissão</p></a>
                     {% endfor %}
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+    <h3 class="mt-5 text-primary"> Histórico de Notas </h3>
+    {% for atividade, nota in notas.items  %}
+        <p>{{ atividade }}</p>
+        <p> Nota: {{ nota.score__max }}</p>
+        <br>
+    {% endfor %}
+
+
 </div>
 {% endblock %}
