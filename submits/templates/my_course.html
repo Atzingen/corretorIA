@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="container">
+    <h1 class="mt-4 mb-4 text-center" style="color: var(--strongaccent)">
+        {{dados.name}}
+    </h1>
+    <h3 class="mt-4 mb-4">
+        {{dados.short_description}}
+    </h3>
+    {% if dados.long_description %}
+        <h3 class="mt-4 mb-4">
+            {{dados.long_description}}
+        </h3>
+    {% endif %}
+    <h3>Status: {{status}}</h3>
+
+    <h3 class="mt-5 text-primary"> Datas de entrega das próximas atividades </h3>
+    <div class="container">
+        <div class="row">
+            {% for date, activities in deadlines.items %}
+            <div class="card mt-2 mb-2 mr-2 ml-2">
+                <div class="card-body">
+                    <h6>{{date}}</h6>
+                    {% for activity in activities %}
+                        <hr/>
+                        <h6 class="mt-3">Atividade: {{activity.name}} </h6>
+                        <p> Template: <a href="/script_download/template_atv1.py" download>{{activity.template_script}}</a> </p>
+                        <a href="{% url 'submit' %}"><p>Link para submissão</p></a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <h3 class="mt-5 text-primary"> Histórico de Notas </h3>
+    {% for atividade, nota in notas.items  %}
+        <p>{{ atividade }}</p>
+        <p> Nota: {{ nota.score__max }}</p>
+        <br>
+    {% endfor %}
+
+
+</div>
+{% endblock %}
